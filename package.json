@@ -22,13 +22,18 @@
     "@oclif/plugin-plugins": "^2.0.1",
     "@types/node-fetch": "^2.6.1",
     "chalk": "4.1.2",
-    "node-fetch": "^2.6.1"
+    "inquirer": "^8.2.1",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@oclif/test": "^2",
     "@types/chai": "^4",
+    "@types/inquirer": "^8.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",
+    "@types/shelljs": "^0.8.11",
     "chai": "^4",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",

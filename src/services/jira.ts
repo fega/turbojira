@@ -1,5 +1,6 @@
 import fetch, {Headers} from 'node-fetch'
 import {JIRA_BASE_URL_REQUIRED_ERROR, JIRA_PASS_REQUIRED_ERROR, JIRA_USER_REQUIRED_ERROR} from '../constans'
+import {JiraIssue} from './jira-view'
 
 export class JiraService {
   pass: string
@@ -35,7 +36,7 @@ export class JiraService {
     return (await r.json()).dashboards as unknown as any[]
   }
 
-  async getIssues(): Promise<any[]> {
+  async getIssues(): Promise<JiraIssue[]> {
     const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
     return (await r.json()).issues as unknown as any[]
   }

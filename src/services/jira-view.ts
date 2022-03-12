@@ -1,6 +1,6 @@
 import chalk = require('chalk')
 
-type JiraIssue ={
+export type JiraIssue ={
   id: string,
   expand: string,
   self: string,
