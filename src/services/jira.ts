@@ -1,0 +1,42 @@
+import fetch, {Headers} from 'node-fetch'
+import {JIRA_BASE_URL_REQUIRED_ERROR, JIRA_PASS_REQUIRED_ERROR, JIRA_USER_REQUIRED_ERROR} from '../constans'
+
+export class JiraService {
+  pass: string
+  user: string
+  baseRestUrl: string
+  baseUrl: string
+  url: string
+  constructor() {
+    this.baseRestUrl = '/rest/api/3'
+    this.baseUrl = process.env.JIRA_BASE_URL || ''
+    this.user = process.env.JIRA_USER || ''
+    this.pass = process.env.JIRA_PASS || ''
+    if (!this.user) throw new Error(JIRA_USER_REQUIRED_ERROR)
+    if (!this.pass) throw new Error(JIRA_PASS_REQUIRED_ERROR)
+    if (!this.baseUrl) throw new Error(JIRA_BASE_URL_REQUIRED_ERROR)
+
+    this.url = `${this.baseUrl.replace('https://', `https://${this.user}:${this.pass}@`)}${this.baseRestUrl}`
+  }
+
+  private getHeaders() {
+    return new Headers({
+      accept: 'application/json',
+    })
+  }
+
+  async getProjects():Promise<any[]> {
+    const r = await fetch(this.url + '/project/search', {headers: this.getHeaders()})
+    return (await r.json()) as unknown as any[]
+  }
+
+  async getDashboards():Promise<any[]> {
+    const r = await fetch(this.url + '/dashboard', {headers: this.getHeaders()})
+    return (await r.json()).dashboards as unknown as any[]
+  }
+
+  async getIssues(): Promise<any[]> {
+    const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
+    return (await r.json()).issues as unknown as any[]
+  }
+}
