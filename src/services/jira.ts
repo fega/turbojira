@@ -23,6 +23,7 @@ export class JiraService {
   private getHeaders() {
     return new Headers({
       accept: 'application/json',
+      'content-type': 'application/json',
     })
   }
 
@@ -41,19 +42,73 @@ export class JiraService {
     return (await r.json()).issues as unknown as any[]
   }
 
-  async updateIssue(key: string, update: any): Promise<JiraIssue> {
+  async updateIssue(key: string, update: any): Promise<void> {
     const r = await fetch(this.url + `/issue/${key}`, {
       headers: this.getHeaders(),
       method: 'PUT',
       body: JSON.stringify(update),
     })
 
-    return r.json()
+    if (r.ok) return
+    console.log(r)
+    throw console.log(await r.text())
+  }
+
+  private async transitionIssueToInProgress(key: string): Promise<void> {
+    const r = await fetch(this.url + `/issue/${key}/transitions`, {
+      headers: this.getHeaders(),
+      method: 'POST',
+      body: JSON.stringify({transition: {
+        id: '11',
+        name: 'Start Work',
+        hasScreen: false,
+        isGlobal: false,
+        isInitial: false,
+        isConditional: false,
+        isLooped: false,
+        to: {
+          id: '3',
+          name: 'In Progress',
+          statusCategory: {id: 4}}}}),
+    })
+
+    if (r.ok) return
+    console.log(r)
+    throw console.log(await r.text())
   }
 
   async updateIssueToInProgress(key: string, message: string): Promise<void> {
+    await this.transitionIssueToInProgress(key)
     await this.updateIssue(key, {
-      update: {comment: [{add: {body: message}}]},
-      transition: {id: 2}})
+      update: {
+        comment: [
+          {
+            add: {
+              body: {
+                version: 1,
+                type: 'doc',
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [
+                      {
+                        type: 'text',
+                        text: `[TurboJira]: ${message}`,
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      fields: {
+        assignee: {
+          id: '61706b2f702bd0006a7040fd',
+        },
+      },
+
+    })
   }
 }

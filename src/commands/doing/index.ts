@@ -19,8 +19,8 @@ export default class Doing extends Command {
   async run(): Promise<void> {
     const {args, flags} = await this.parse(Doing)
 
-    const a = new JiraService()
-    const issues = await a.getIssues()
+    const jiraService = new JiraService()
+    const issues = await jiraService.getIssues()
 
     const formatted = issues.map(element => ({
       ...element,
@@ -38,6 +38,6 @@ export default class Doing extends Command {
 
     const ticket = issues.find(el => el.key === key)
     await gitService.startTask(ticket as JiraIssue)
-    await a.updateIssueToInProgress(key, 'Issue transitioned')
+    await jiraService.updateIssueToInProgress(key, 'Issue transitioned to in progress')
   }
 }
