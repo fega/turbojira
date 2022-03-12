@@ -34,10 +34,10 @@ export default class Doing extends Command {
       choices: formatted,
       pageSize: 50,
     }])
+    const key = answers['What task are you doing?']
 
-    console.log(answers)
-
-    const ticket = issues.find(el => el.key === answers['What task are you doing?'])
+    const ticket = issues.find(el => el.key === key)
     await gitService.startTask(ticket as JiraIssue)
+    await a.updateIssueToInProgress(key, 'Issue transitioned')
   }
 }

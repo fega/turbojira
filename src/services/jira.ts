@@ -40,4 +40,20 @@ export class JiraService {
     const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
     return (await r.json()).issues as unknown as any[]
   }
+
+  async updateIssue(key: string, update: any): Promise<JiraIssue> {
+    const r = await fetch(this.url + `/issue/${key}`, {
+      headers: this.getHeaders(),
+      method: 'PUT',
+      body: JSON.stringify(update),
+    })
+
+    return r.json()
+  }
+
+  async updateIssueToInProgress(key: string, message: string): Promise<void> {
+    await this.updateIssue(key, {
+      update: {comment: [{add: {body: message}}]},
+      transition: {id: 2}})
+  }
 }
