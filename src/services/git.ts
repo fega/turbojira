@@ -13,8 +13,13 @@ class GitService {
       throw new Error('Git checkout develop failed')
     }
 
-    shell.exec('git pull')
-    shell.exec(`git checkout -b ${branchName}`)
+    shell.exec('git pull origin/develop')
+    if (shell.exec(`git checkout -b ${branchName}`).code === 0) {
+      console.log('New branch created')
+    } else {
+      console.log(`Switching to "${branchName}"`)
+      shell.exec(`git checkout ${branchName}`)
+    }
   }
 }
 
