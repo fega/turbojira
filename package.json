@@ -25,6 +25,7 @@
     "inquirer": "^8.2.1",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
+    "rc": "^1.2.8",
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/inquirer": "^8.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",
+    "@types/rc": "^1.2.1",
     "@types/shelljs": "^0.8.11",
     "chai": "^4",
     "eslint": "^7.32.0",

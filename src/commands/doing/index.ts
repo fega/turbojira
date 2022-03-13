@@ -1,8 +1,9 @@
 import * as inquirer from 'inquirer'
-import {Command, Flags} from '@oclif/core'
+import {Command} from '@oclif/core'
 import {JiraService} from '../../services/jira'
 import jiraView, {JiraIssue} from '../../services/jira-view'
 import gitService from '../../services/git'
+import {Arg} from '@oclif/core/lib/interfaces'
 
 export default class Doing extends Command {
   static description = `Get your Jira tickets and issues, select one and start working
@@ -14,13 +15,14 @@ export default class Doing extends Command {
 
   static flags = {}
 
-  static args = []
+  static args = Array.from({length: 100}).fill({name: 'search'}) as Arg<any>[]
 
   async run(): Promise<void> {
-    const {args, flags} = await this.parse(Doing)
+    const {args, argv} = await this.parse(Doing)
+    console.log(args, argv)
 
     const jiraService = new JiraService()
-    const issues = await jiraService.getIssues()
+    const issues = await jiraService.getIssues(argv.join(' '))
 
     const formatted = issues.map(element => ({
       ...element,
@@ -35,7 +37,6 @@ export default class Doing extends Command {
       pageSize: 50,
     }])
     const key = answers['What task are you doing?']
-
     const ticket = issues.find(el => el.key === key)
     await gitService.startTask(ticket as JiraIssue)
     await jiraService.updateIssueToInProgress(key, 'Issue transitioned to in progress')

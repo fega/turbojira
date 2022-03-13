@@ -1,5 +1,6 @@
 import {Command, Flags} from '@oclif/core'
 import {JiraService} from '../../services/jira'
+import jiraView from '../../services/jira-view'
 
 export default class Projects extends Command {
   static description = 'Say hello'
@@ -22,6 +23,6 @@ hello friend from oclif! (./src/commands/hello/index.ts)
     const a = new JiraService()
     const projects = await a.getProjects()
 
-    console.table(projects)
+    console.table(projects.map(element => jiraView.formatProject(element)).join('\n'))
   }
 }

@@ -32,13 +32,24 @@ export type JiraIssue ={
   }
 }
 }
+export type JiraProject ={
+  name: string,
+  id: string,
+  key: string,
+  self: string,
+}
 
+const SEPARATOR = chalk.yellowBright(':')
 class JiraView {
   public formatIssue(issue: JiraIssue): string {
-    return `${this.getPriority(issue)}  ${this.getKey(issue)}  ${this.getIssueType(issue)}  ${this.getIssueStatus(issue)}  ${chalk.yellowBright(':')}  ${this.getIssueSummary(issue)}`
+    return `${this.getPriority(issue)}  ${this.getKey(issue)}  ${this.getIssueType(issue)}  ${this.getIssueStatus(issue)}  ${SEPARATOR}  ${this.getIssueSummary(issue)}`
   }
 
-  private getKey(issue: JiraIssue) {
+  public formatProject(project: JiraProject): string {
+    return `${this.getKey(project)} ${SEPARATOR} ${project.name}`
+  }
+
+  private getKey(issue: {key: string}) {
     return chalk.whiteBright(chalk.underline(issue?.key))
   }
 
@@ -62,6 +73,7 @@ class JiraView {
 
   private getIssueStatus(issue: JiraIssue) {
     if (issue?.fields?.status?.name.includes('Open')) return chalk.inverse(`     ${issue?.fields?.status?.name}     `)
+    if (issue?.fields?.status?.name.includes('Backlog')) return chalk.inverse('    Baglog    ')
     if (issue?.fields?.status?.name.includes('In Progress')) return chalk.bgBlue(` ${issue?.fields?.status?.name}  `)
     if (issue?.fields?.status?.name.includes('Done')) return chalk.gray(chalk.bgGreen('    Done      '))
     if (issue?.fields?.status?.name.includes('Resolved')) return chalk.gray(chalk.bgGreen('   Resolved   '))

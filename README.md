@@ -29,55 +29,35 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`turbojira hello PERSON`](#turbojira-hello-person)
-* [`turbojira hello world`](#turbojira-hello-world)
+* [`turbojira doing`](#turbojira-doing)
 * [`turbojira help [COMMAND]`](#turbojira-help-command)
+* [`turbojira issues [PERSON]`](#turbojira-issues-person)
 * [`turbojira plugins`](#turbojira-plugins)
 * [`turbojira plugins:inspect PLUGIN...`](#turbojira-pluginsinspect-plugin)
 * [`turbojira plugins:install PLUGIN...`](#turbojira-pluginsinstall-plugin)
 * [`turbojira plugins:link PLUGIN`](#turbojira-pluginslink-plugin)
 * [`turbojira plugins:uninstall PLUGIN...`](#turbojira-pluginsuninstall-plugin)
 * [`turbojira plugins update`](#turbojira-plugins-update)
+* [`turbojira projects [PERSON]`](#turbojira-projects-person)
 
-## `turbojira hello PERSON`
+## `turbojira doing`
 
-Say hello
-
-```
-USAGE
-  $ turbojira hello [PERSON] -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Whom is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
-```
-
-_See code: [dist/commands/hello/index.ts](https://github.com/personal/hello-world/blob/v0.0.0/dist/commands/hello/index.ts)_
-
-## `turbojira hello world`
-
-Say hello world
+Get your Jira tickets and issues, select one and start working
 
 ```
 USAGE
-  $ turbojira hello world
+  $ turbojira doing
 
 DESCRIPTION
-  Say hello world
+  Get your Jira tickets and issues, select one and start working
+
+  This command will checkout to develop, pull, and checkout to a new branch with name ISSUE_TYPE/ISSUE_KEY/DESCRIPTION
 
 EXAMPLES
-  $ oex hello world
-  hello world! (./src/commands/hello/world.ts)
+  $ turbojira issues
 ```
+
+_See code: [dist/commands/doing/index.ts](https://github.com/personal/hello-world/blob/v0.0.0/dist/commands/doing/index.ts)_
 
 ## `turbojira help [COMMAND]`
 
@@ -98,6 +78,29 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.10/src/commands/help.ts)_
+
+## `turbojira issues [PERSON]`
+
+Get your Jira tickets and issues
+
+```
+USAGE
+  $ turbojira issues [PERSON] [-f <value>]
+
+ARGUMENTS
+  PERSON  Person to say hello to
+
+FLAGS
+  -f, --from=<value>  Whom is saying hello
+
+DESCRIPTION
+  Get your Jira tickets and issues
+
+EXAMPLES
+  $ turbojira issues
+```
+
+_See code: [dist/commands/issues/index.ts](https://github.com/personal/hello-world/blob/v0.0.0/dist/commands/issues/index.ts)_
 
 ## `turbojira plugins`
 
@@ -244,4 +247,28 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `turbojira projects [PERSON]`
+
+Say hello
+
+```
+USAGE
+  $ turbojira projects [PERSON] [-f <value>]
+
+ARGUMENTS
+  PERSON  Person to say hello to
+
+FLAGS
+  -f, --from=<value>  Whom is saying hello
+
+DESCRIPTION
+  Say hello
+
+EXAMPLES
+  $ oex hello friend --from oclif
+  hello friend from oclif! (./src/commands/hello/index.ts)
+```
+
+_See code: [dist/commands/projects/index.ts](https://github.com/personal/hello-world/blob/v0.0.0/dist/commands/projects/index.ts)_
 <!-- commandsstop -->

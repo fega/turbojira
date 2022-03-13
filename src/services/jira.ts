@@ -1,7 +1,7 @@
 import fetch, {Headers} from 'node-fetch'
 import {JIRA_BASE_URL_REQUIRED_ERROR, JIRA_PASS_REQUIRED_ERROR, JIRA_USER_REQUIRED_ERROR} from '../constans'
-import {JiraIssue} from './jira-view'
-
+import {JiraIssue, JiraProject} from './jira-view'
+import config from './config'
 export class JiraService {
   pass: string
   user: string
@@ -9,10 +9,10 @@ export class JiraService {
   baseUrl: string
   url: string
   constructor() {
+    this.baseUrl = config.jiraBaseUrl
+    this.user = config.jiraUser
+    this.pass = config.jiraPass
     this.baseRestUrl = '/rest/api/3'
-    this.baseUrl = process.env.JIRA_BASE_URL || ''
-    this.user = process.env.JIRA_USER || ''
-    this.pass = process.env.JIRA_PASS || ''
     if (!this.user) throw new Error(JIRA_USER_REQUIRED_ERROR)
     if (!this.pass) throw new Error(JIRA_PASS_REQUIRED_ERROR)
     if (!this.baseUrl) throw new Error(JIRA_BASE_URL_REQUIRED_ERROR)
@@ -27,9 +27,9 @@ export class JiraService {
     })
   }
 
-  async getProjects():Promise<any[]> {
+  async getProjects():Promise<JiraProject[]> {
     const r = await fetch(this.url + '/project/search', {headers: this.getHeaders()})
-    return (await r.json()) as unknown as any[]
+    return ((await r.json()).values) as unknown as any[]
   }
 
   async getDashboards():Promise<any[]> {
@@ -37,8 +37,13 @@ export class JiraService {
     return (await r.json()).dashboards as unknown as any[]
   }
 
-  async getIssues(): Promise<JiraIssue[]> {
-    const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
+  private getJQLSearch(search?: string): string {
+    return search ? ` text ~ "${search}"` : ''
+  }
+
+  async getIssues(search?: string): Promise<JiraIssue[]> {
+    const r = await fetch(this.url + '/search?jql=' + this.getJQLSearch(search), {headers: this.getHeaders()})
+    // const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
     return (await r.json()).issues as unknown as any[]
   }
 
