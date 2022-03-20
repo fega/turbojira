@@ -41,8 +41,17 @@ export class JiraService {
     return search ? ` text ~ "${search}"` : ''
   }
 
+  private getJQLBaseProject(): string {
+    return config.baseProject ? `project%20%3D%20${config.baseProject}` : ''
+  }
+
+  private getJQL(strings: Array<string>): string {
+    return strings.filter(v => v).join(' AND ')
+  }
+
   async getIssues(search?: string): Promise<JiraIssue[]> {
-    const r = await fetch(this.url + '/search?jql=' + this.getJQLSearch(search), {headers: this.getHeaders()})
+    const jql = this.getJQL([this.getJQLBaseProject(), this.getJQLSearch(search)])
+    const r = await fetch(this.url + '/search?jql=' + jql, {headers: this.getHeaders()})
     // const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
     return (await r.json()).issues as unknown as any[]
   }
@@ -110,7 +119,7 @@ export class JiraService {
       },
       fields: {
         assignee: {
-          id: '61706b2f702bd0006a7040fd',
+          id: config.jiraUserId,
         },
       },
 

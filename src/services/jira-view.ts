@@ -73,7 +73,7 @@ class JiraView {
 
   private getIssueStatus(issue: JiraIssue) {
     if (issue?.fields?.status?.name.includes('Open')) return chalk.inverse(`     ${issue?.fields?.status?.name}     `)
-    if (issue?.fields?.status?.name.includes('Backlog')) return chalk.inverse('    Baglog    ')
+    if (issue?.fields?.status?.name.includes('Backlog')) return chalk.inverse('    Backlog   ')
     if (issue?.fields?.status?.name.includes('In Progress')) return chalk.bgBlue(` ${issue?.fields?.status?.name}  `)
     if (issue?.fields?.status?.name.includes('Done')) return chalk.gray(chalk.bgGreen('    Done      '))
     if (issue?.fields?.status?.name.includes('Resolved')) return chalk.gray(chalk.bgGreen('   Resolved   '))

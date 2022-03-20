@@ -4,6 +4,8 @@ import {JiraService} from '../../services/jira'
 import jiraView, {JiraIssue} from '../../services/jira-view'
 import gitService from '../../services/git'
 import {Arg} from '@oclif/core/lib/interfaces'
+import config from '../../services/config'
+import {log} from '../../services/logger'
 
 export default class Doing extends Command {
   static description = `Get your Jira tickets and issues, select one and start working
@@ -19,7 +21,6 @@ export default class Doing extends Command {
 
   async run(): Promise<void> {
     const {args, argv} = await this.parse(Doing)
-    console.log(args, argv)
 
     const jiraService = new JiraService()
     const issues = await jiraService.getIssues(argv.join(' '))
@@ -38,7 +39,8 @@ export default class Doing extends Command {
     }])
     const key = answers['What task are you doing?']
     const ticket = issues.find(el => el.key === key)
-    await gitService.startTask(ticket as JiraIssue)
+    await gitService.startTask(ticket as JiraIssue, {baseBranch: config.baseBranch})
+    log('Transition issue to in progress')
     await jiraService.updateIssueToInProgress(key, 'Issue transitioned to in progress')
   }
 }

@@ -6,6 +6,7 @@ const defaults = {
   jiraBaseUrl: '',
   baseBranch: '',
   baseProject: '',
+  jiraUserId: '',
 }
 
 const getProfileConfig = (): typeof defaults => {
