@@ -41,6 +41,10 @@ export class JiraService {
     return search ? ` text ~ "${search}"` : ''
   }
 
+  private getJQLForIssueKey = (search?: string): string => {
+    return search ? ` key = "${search}"` : ''
+  }
+
   private getJQLBaseProject(): string {
     return config.baseProject ? `project%20%3D%20${config.baseProject}` : ''
   }
@@ -49,10 +53,27 @@ export class JiraService {
     return strings.filter(v => v).join(' AND ')
   }
 
-  async getIssues(search?: string): Promise<JiraIssue[]> {
+  async searchIssuesByKey(key?: string): Promise<JiraIssue[]> {
+    console.log('SEARCH ISSUES BY KEY' + `"${key}"`)
+    const jql = this.getJQL([this.getJQLBaseProject(), this.getJQLForIssueKey(key)])
+    const r = await fetch(this.url + '/search?jql=' + jql, {headers: this.getHeaders()})
+    // const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
+    if (!r.ok) {
+      throw console.error(await r.text())
+    }
+
+    return (await r.json()).issues as unknown as any[]
+  }
+
+  async searchIssues(search?: string): Promise<JiraIssue[]> {
+    console.log('SEARCH ISSUES ' + `"${search}"`)
     const jql = this.getJQL([this.getJQLBaseProject(), this.getJQLSearch(search)])
     const r = await fetch(this.url + '/search?jql=' + jql, {headers: this.getHeaders()})
     // const r = await fetch(this.url + '/search?jql=project%20%3D%20PROF', {headers: this.getHeaders()})
+    if (!r.ok) {
+      throw console.error(await r.text())
+    }
+
     return (await r.json()).issues as unknown as any[]
   }
 
@@ -83,7 +104,10 @@ export class JiraService {
         to: {
           id: '3',
           name: 'In Progress',
-          statusCategory: {id: 4}}}}),
+          statusCategory: {id: 4}},
+      },
+      },
+      ),
     })
 
     if (r.ok) return

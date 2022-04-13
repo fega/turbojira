@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer'
-import {Command} from '@oclif/core'
+import {Command, Flags} from '@oclif/core'
 import {JiraService} from '../../services/jira'
 import jiraView, {JiraIssue} from '../../services/jira-view'
 import gitService from '../../services/git'
@@ -15,15 +15,20 @@ export default class Doing extends Command {
     '$ turbojira issues',
   ]
 
-  static flags = {}
+  static flags = {
+    currentBranch: Flags.boolean({char: 'c', description: 'Start from current branch', required: false}),
+  }
 
   static args = Array.from({length: 100}).fill({name: 'search'}) as Arg<any>[]
 
   async run(): Promise<void> {
-    const {args, argv} = await this.parse(Doing)
+    const {flags: {currentBranch}, args, argv} = await this.parse(Doing)
 
     const jiraService = new JiraService()
-    const issues = await jiraService.getIssues(argv.join(' '))
+    let issues: JiraIssue[] = []
+    issues = await (new RegExp(`${config.baseProject}-\\d{1,4}`).test(argv.join(' ')) ?
+      jiraService.searchIssuesByKey(argv.join(' ')) :
+      jiraService.searchIssues(argv.join(' ')))
 
     const formatted = issues.map(element => ({
       ...element,
@@ -39,7 +44,7 @@ export default class Doing extends Command {
     }])
     const key = answers['What task are you doing?']
     const ticket = issues.find(el => el.key === key)
-    await gitService.startTask(ticket as JiraIssue, {baseBranch: config.baseBranch})
+    await gitService.startTask(ticket as JiraIssue, {baseBranch: config.baseBranch, startFromCurrentBranch: currentBranch})
     log('Transition issue to in progress')
     await jiraService.updateIssueToInProgress(key, 'Issue transitioned to in progress')
   }

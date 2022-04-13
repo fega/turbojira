@@ -19,7 +19,7 @@ export default class Issues extends Command {
     const {args, flags} = await this.parse(Issues)
 
     const a = new JiraService()
-    const issues = await a.getIssues()
+    const issues = await a.searchIssues()
 
     console.log(issues.map(element => jiraView.formatIssue(element)).join('\n'))
   }
