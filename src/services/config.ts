@@ -9,20 +9,23 @@ const defaults = {
   baseBranch: '',
   baseProject: '',
   jiraUserId: '',
+  profile: '',
 }
 
 const getProfileConfig = (): typeof defaults => {
   const config = rc('turbojira', defaults)
   const {PROFILE} = process.env
   const profileKey = PROFILE || 'default'
-  if (PROFILE === 'default' || !PROFILE) {
-    return config
-  }
 
-  if (!config[profileKey]) throw new Error(`PROFILE not found: "${PROFILE}"`)
+  if (!config[profileKey] && profileKey !== 'default') throw new Error(`PROFILE not found: "${PROFILE}"`)
 
-  const repoConfig = get(config, `${profileKey}.${gitService.getRepoName()}`)
-  return {...config[PROFILE], ...repoConfig}
+  const repoConfig: typeof defaults = get(config, `${profileKey}.${gitService.getRepoName()}`, {})
+  const repoProfileConfig = repoConfig.profile ? config[repoConfig.profile] : {}
+  console.log(repoProfileConfig)
+  const finalConfig = {...config[profileKey], ...repoProfileConfig, ...repoConfig}
+  console.log('FINAL CONFIG')
+  console.log(finalConfig)
+  return finalConfig
 }
 
 export default getProfileConfig()
