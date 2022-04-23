@@ -21,10 +21,8 @@ const getProfileConfig = (): typeof defaults => {
 
   const repoConfig: typeof defaults = get(config, `${profileKey}.${gitService.getRepoName()}`, {})
   const repoProfileConfig = repoConfig.profile ? config[repoConfig.profile] : {}
-  console.log(repoProfileConfig)
+
   const finalConfig = {...config[profileKey], ...repoProfileConfig, ...repoConfig}
-  console.log('FINAL CONFIG')
-  console.log(finalConfig)
   return finalConfig
 }
 
