@@ -33,7 +33,7 @@
     "@types/chai": "^4",
     "@types/inquirer": "^8.2.0",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.9.4",
+    "@types/node": "^16.11.56",
     "@types/rc": "^1.2.1",
     "@types/shelljs": "^0.8.11",
     "chai": "^4",
