@@ -22,7 +22,7 @@
     "@oclif/plugin-plugins": "^2.0.1",
     "@types/node-fetch": "^2.6.1",
     "chalk": "4.1.2",
-    "inquirer": "^8.2.1",
+    "inquirer": "^8.2.5",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
     "rc": "^1.2.8",
